@@ -12,10 +12,9 @@ colorButtons.forEach(btn => {
   });
 });
 
-// ===== Arrastrar y soltar piezas =====
+// ===== Drag & Drop =====
 pieces.forEach(piece => {
   piece.setAttribute("draggable", true);
-
   piece.addEventListener("dragstart", e => {
     e.dataTransfer.setData("text", e.target.id);
   });
@@ -32,36 +31,28 @@ canvas.addEventListener("drop", e => {
   const rect = canvas.getBoundingClientRect();
   newPiece.style.position = "absolute";
   newPiece.style.left = e.clientX - rect.left - piece.width/2 + "px";
-  newPiece.style.top  = e.clientY - rect.top  - piece.height/2 + "px";
+  newPiece.style.top = e.clientY - rect.top - piece.height/2 + "px";
 
-  canvas.appendChild(newPiece);
-});
+  // Escalar y rotar
+  newPiece.setAttribute("data-scale", 1);
+  newPiece.setAttribute("data-rotation", 0);
+  newPiece.addEventListener("wheel", ev => {
+    ev.preventDefault();
+    let scale = parseFloat(newPiece.getAttribute("data-scale"));
+    let rotation = parseFloat(newPiece.getAttribute("data-rotation"));
+    if (ev.shiftKey) rotation += ev.deltaY < 0 ? 5 : -5;
+    else {
+      scale += ev.deltaY < 0 ? 0.1 : -0.1;
+      scale = Math.max(0.1, scale);
+    }
+    newPiece.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+    newPiece.setAttribute("data-scale", scale);
+    newPiece.setAttribute("data-rotation", rotation);
+  });
 
-// Escalar o rotar pieza clonada
-newPiece.addEventListener("wheel", (ev) => {
-  ev.preventDefault();
-  
-  let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
-  let rotation = parseFloat(newPiece.getAttribute("data-rotation") || 0);
-
-  if (ev.shiftKey) {
-    // Rotar si se mantiene Shift
-    rotation += ev.deltaY < 0 ? 5 : -5; // grados
-  } else {
-    // Escalar normalmente
-    scale += ev.deltaY < 0 ? 0.1 : -0.1;
-    scale = Math.max(0.1, scale);
-  }
-
-  newPiece.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
-  newPiece.setAttribute("data-scale", scale);
-  newPiece.setAttribute("data-rotation", rotation);
-});
-
-
-  // Aplicar color seleccionado (solo piezas negras)
+  // Aplicar color
   if (selectedColor) {
-    switch(selectedColor) {
+    switch(selectedColor){
       case "black": newPiece.style.filter = "none"; break;
       case "red": newPiece.style.filter = "invert(19%) sepia(89%) saturate(4900%) hue-rotate(-5deg)"; break;
       case "green": newPiece.style.filter = "invert(30%) sepia(26%) saturate(350%) hue-rotate(78deg)"; break;
@@ -73,7 +64,7 @@ newPiece.addEventListener("wheel", (ev) => {
   canvas.appendChild(newPiece);
 });
 
-// ===== Descargar el collage =====
+// ===== Descargar =====
 downloadBtn.addEventListener("click", () => {
   html2canvas(canvas).then(canvasExport => {
     const link = document.createElement("a");
@@ -81,11 +72,6 @@ downloadBtn.addEventListener("click", () => {
     link.href = canvasExport.toDataURL("image/png");
     link.click();
   });
-
   alert("¡Descargalo con garra! 🎉");
-});
-
-});
-
 });
 
