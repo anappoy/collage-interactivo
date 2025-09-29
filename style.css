@@ -1,63 +1,75 @@
-/* General */
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+/* Cuerpo de la página */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+/* Título */
 h1 {
   margin-bottom: 20px;
 }
 
-/* Contenedor principal: canvas y bandeja */
-#container {
-  display: flex;
-  gap: 20px;
-  flex-direction: row-reverse; /* bandeja a la derecha */
-}
-
-/* Bandeja de piezas */
-#tray {
-  width: 160px;             /* un poco más ancho para dos columnas */
-  border: 2px solid #333;
-  padding: 10px;
-  display: grid;            /* usamos grid para dos columnas */
-  grid-template-columns: 1fr 1fr;  /* dos columnas iguales */
-  gap: 10px;                /* espacio entre piezas */
-}
-
-#tray img {
-  width: 70px;              /* piezas más pequeñas */
-  cursor: grab;
-}
-
-/* Canvas */
-#canvas {
-  width: 600px;         /* ancho proporcional al stencil */
-  height: 849px;        /* altura proporcional calculada */
-  border: 2px dashed #333;
+/* Canvas del stencil base */
+.canvas {
   position: relative;
-  background-color: #f0f0f0;
-  overflow: hidden;
+  display: inline-block;
+  margin-bottom: 20px;
 }
 
-/* Fondo (stencil) */
-#fondo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;   /* mantiene proporción y cubre todo el canvas */
-  pointer-events: none;
+/* Stencil base */
+.stencil {
+  max-width: 600px;  /* ancho máximo */
+  height: auto;      /* mantiene proporción */
+  display: block;
+  margin: 0 auto;
 }
 
-/* Piezas arrastrables dentro del canvas */
-.pieza-canvas {
-  position: absolute;
+/* Contenedor de piezas */
+.pieces-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* dos columnas */
+  gap: 10px;
+  max-width: 400px;  /* ancho total del panel de piezas */
+  margin: 0 auto 20px auto; /* centrado con margen inferior */
+}
+
+/* Piezas individuales */
+.piece {
+  width: 120px;   /* tamaño inicial de las piezas */
+  height: auto;   /* mantiene proporción */
   cursor: grab;
-  width: 100px;
-  transform-origin: center center;
+}
+
+/* Piezas al arrastrar */
+.piece:active {
+  cursor: grabbing;
+}
+
+/* Botón de descarga */
+.actions {
+  margin-top: 10px;
+}
+
+button#downloadBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button#downloadBtn:hover {
+  background-color: #e65500;
 }
