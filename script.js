@@ -34,18 +34,30 @@ canvas.addEventListener("drop", e => {
   newPiece.style.left = e.clientX - rect.left - piece.width/2 + "px";
   newPiece.style.top  = e.clientY - rect.top  - piece.height/2 + "px";
 
-  // Escalar la pieza con la rueda del mouse
-  newPiece.addEventListener("wheel", ev => {
-    ev.preventDefault();
-    let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
-    if (ev.deltaY < 0) {
-      scale += 0.1;
-    } else {
-      scale = Math.max(0.1, scale - 0.1);
-    }
-    newPiece.style.transform = `scale(${scale})`;
-    newPiece.setAttribute("data-scale", scale);
-  });
+  canvas.appendChild(newPiece);
+});
+
+// Escalar o rotar pieza clonada
+newPiece.addEventListener("wheel", (ev) => {
+  ev.preventDefault();
+  
+  let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
+  let rotation = parseFloat(newPiece.getAttribute("data-rotation") || 0);
+
+  if (ev.shiftKey) {
+    // Rotar si se mantiene Shift
+    rotation += ev.deltaY < 0 ? 5 : -5; // grados
+  } else {
+    // Escalar normalmente
+    scale += ev.deltaY < 0 ? 0.1 : -0.1;
+    scale = Math.max(0.1, scale);
+  }
+
+  newPiece.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+  newPiece.setAttribute("data-scale", scale);
+  newPiece.setAttribute("data-rotation", rotation);
+});
+
 
   // Aplicar color seleccionado (solo piezas negras)
   if (selectedColor) {
