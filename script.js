@@ -17,13 +17,11 @@ pieces.forEach(piece => {
   piece.setAttribute("draggable", true);
 
   piece.addEventListener("dragstart", e => {
-  e.dataTransfer.setData("text", e.target.id);
-});
+    e.dataTransfer.setData("text", e.target.id);
+  });
 });
 
 canvas.addEventListener("dragover", e => e.preventDefault());
-
-});
 
 canvas.addEventListener("drop", e => {
   e.preventDefault();
@@ -36,12 +34,8 @@ canvas.addEventListener("drop", e => {
   newPiece.style.left = e.clientX - rect.left - piece.width/2 + "px";
   newPiece.style.top  = e.clientY - rect.top  - piece.height/2 + "px";
 
-  canvas.appendChild(newPiece);
-});
-
-
   // Escalar la pieza con la rueda del mouse
-  newPiece.addEventListener("wheel", (ev) => {
+  newPiece.addEventListener("wheel", ev => {
     ev.preventDefault();
     let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
     if (ev.deltaY < 0) {
@@ -69,7 +63,7 @@ canvas.addEventListener("drop", e => {
 
 // ===== Descargar el collage =====
 downloadBtn.addEventListener("click", () => {
-  html2canvas(canvas).then((canvasExport) => {
+  html2canvas(canvas).then(canvasExport => {
     const link = document.createElement("a");
     link.download = "collage.png";
     link.href = canvasExport.toDataURL("image/png");
@@ -77,6 +71,8 @@ downloadBtn.addEventListener("click", () => {
   });
 
   alert("¡Descargalo con garra! 🎉");
+});
+
 });
 
 });
