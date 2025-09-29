@@ -8,29 +8,64 @@ let dragged = null;
 let offsetX = 0;
 let offsetY = 0;
 
-// ARRASTRAR PIEZAS
+// ARRASTRAR PIEZAS DESDE LA BANDEJA
 piezas.forEach(pieza => {
-  pieza.addEventListener('dragstart', dragStart);
+  pieza.addEventListener('dragstart', (e) => {
+    // clonamos la pieza
+    dragged = e.target.cloneNode(true);
+    dragged.classList.add('pieza-canvas');
 
-  // ESCALAR CON LA RUEDA
-  pieza.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    let scale = parseFloat(pieza.dataset.scale) || 1;
-    scale += e.deltaY * -0.001;          // rueda arriba → agranda, abajo → achica
-    scale = Math.min(Math.max(0.5, scale), 2); // límite 0.5x a 2x
-    pieza.style.transform = `scale(${scale})`;
-    pieza.dataset.scale = scale;
+    // valores iniciales de escala
+    dragged.dataset.scale = 1;
+
+    // activar el arrastre dentro del canvas
+    dragged.addEventListener('mousedown', pieceMouseDown);
+
+    // permitir zoom con la rueda
+    dragged.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      let scale = parseFloat(dragged.dataset.scale) || 1;
+      scale += e.deltaY * -0.001;
+      scale = Math.min(Math.max(0.5, scale), 2);
+      dragged.style.transform = `scale(${scale})`;
+      dragged.dataset.scale = scale;
+    });
+
+    // insertamos en el canvas
+    canvas.appendChild(dragged);
+
+    // posición inicial
+    const rect = canvas.getBoundingClientRect();
+    dragged.style.left = `${e.clientX - rect.left - 40}px`;
+    dragged.style.top = `${e.clientY - rect.top - 40}px`;
   });
 });
 
-// FUNCIONES DE ARRASTRE
-function dragStart(e) {
-  dragged = e.target.cloneNode(true);  // clonamos la pieza
-  dragged.classList.add('pieza-canvas');
-  canvas.appendChild(dragged);
+// FUNCIONES DE ARRASTRE DENTRO DEL CANVAS
+function pieceMouseDown(e) {
+  dragged = e.target;
+  offsetX = e.offsetX;
+  offsetY = e.offsetY;
 
-  const rect = dragged.getBoundingClientRect();
-  offsetX = e.clientX - rect.left;
-  offsetY = e.clientY - rect.top;
+  document.addEventListener('mousemove', pieceMouseMove);
+  document.addEventListener('mouseup', pieceMouseUp);
+}
 
-  dragged.style.lef
+function pieceMouseMove(e) {
+  if (!dragged) return;
+  const rect = canvas.getBoundingClientRect();
+  dragged.style.left = `${e.clientX - rect.left - offsetX}px`;
+  dragged.style.top = `${e.clientY - rect.top - offsetY}px`;
+}
+
+function pieceMouseUp(e) {
+  document.removeEventListener('mousemove', pieceMouseMove);
+  document.removeEventListener('mouseup', pieceMouseUp);
+  dragged = null;
+}
+
+// BOTÓN DE DESCARGA SIMULADO
+downloadBtn.addEventListener('click', () => {
+  alert("¡Descargalo con garra! 🎉");
+});
+
