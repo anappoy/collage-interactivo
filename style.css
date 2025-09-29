@@ -1,34 +1,36 @@
+/* === Estilos generales === */
 body {
   font-family: sans-serif;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 20px;
-  gap: 20px;
   background: #f5f5f5;
+  padding: 20px;
 }
 
 h1 {
-  width: 100%;
   text-align: center;
+  margin-bottom: 20px;
 }
 
-/* Canvas con stencil */
+.main-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* === Canvas con stencil === */
 .canvas {
-  position: relative; /* importante para posicionar piezas absolutas */
-  width: 400px;       /* ancho del stencil */
+  position: relative;
+  width: 400px;  /* ancho del stencil */
   max-width: 90vw;
-  height: auto;       
-  background: #fff;
   border: 1px solid #ccc;
+  background: #fff;
 }
 
-/* Piezas clonadas dentro del canvas */
-.canvas img {
-  cursor: grab;
+.canvas img.stencil {
+  width: 100%;
+  height: auto;
 }
 
-/* Panel derecho: color + piezas */
+/* === Panel derecho === */
 .panel {
   display: flex;
   flex-direction: column;
@@ -42,7 +44,6 @@ h1 {
   margin-bottom: 10px;
 }
 
-/* Botones de color */
 .color-btn {
   width: 30px;
   height: 30px;
@@ -51,7 +52,7 @@ h1 {
   border: 2px solid #333;
 }
 
-/* Colores de tu paleta */
+/* Paleta de colores */
 .color-black { background: #000000; filter: none; }
 .color-red { background: #e91f1f; filter: invert(19%) sepia(89%) saturate(4900%) hue-rotate(-5deg); }
 .color-green { background: #4e7a47; filter: invert(30%) sepia(26%) saturate(350%) hue-rotate(78deg); }
@@ -63,8 +64,8 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 columnas */
   gap: 10px;
-  max-width: 360px;
   align-items: stretch; /* filas de igual altura */
+  max-width: 360px;
 }
 
 /* Piezas del panel derecho */
