@@ -45,14 +45,15 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
   gap: 10px; /* espacio entre piezas */
-  max-width: 300px; /* opcional: ancho total del panel de piezas */
+  max-width: 360px; /* opcional: ancho total del panel de piezas */
   margin-left: 20px; /* opcional: separación del canvas */
+  align-items: stretch; /* fuerza que las filas tengan la misma altura */
 }
 
-/* Piezas individuales */
 .piece {
-  width: 80px;   /* tamaño inicial de las piezas */
-  height: auto;   /* mantiene proporción */
+  width: 100%;       /* ocupa todo el ancho de la columna */
+  height: 100%;      /* ocupa toda la altura de la fila */
+  object-fit: contain; /* mantiene proporción de la imagen dentro del espacio */
   cursor: grab;
 }
 
