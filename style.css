@@ -43,9 +43,10 @@ h1 {
 /* Contenedor de piezas */
 .pieces-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* dos columnas */
-  gap: 10px;
-  max-width: 400px;   /* ancho total del panel de piezas */
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+  gap: 10px; /* espacio entre piezas */
+  max-width: 300px; /* opcional: ancho total del panel de piezas */
+  margin-left: 20px; /* opcional: separación del canvas */
 }
 
 /* Piezas individuales */
