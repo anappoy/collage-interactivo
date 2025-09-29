@@ -37,20 +37,20 @@ canvas.addEventListener("drop", (e) => {
   newPiece.style.cursor = "grab";
   newPiece.setAttribute("data-scale", 1);
 
-  // ===== Escalar la pieza con la rueda del mouse =====
+  // Escalar la pieza con la rueda del mouse
   newPiece.addEventListener("wheel", (ev) => {
     ev.preventDefault();
     let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
     if (ev.deltaY < 0) {
-      scale += 0.1; // agrandar
+      scale += 0.1;
     } else {
-      scale = Math.max(0.1, scale - 0.1); // achicar
+      scale = Math.max(0.1, scale - 0.1);
     }
     newPiece.style.transform = `scale(${scale})`;
     newPiece.setAttribute("data-scale", scale);
   });
 
-  // ===== Aplicar color seleccionado (solo si es negro por defecto) =====
+  // Aplicar color seleccionado (solo piezas negras)
   if (selectedColor) {
     switch(selectedColor) {
       case "black": newPiece.style.filter = "none"; break;
@@ -74,5 +74,7 @@ downloadBtn.addEventListener("click", () => {
   });
 
   alert("¡Descargalo con garra! 🎉");
+});
+
 });
 
