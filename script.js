@@ -1,73 +1,70 @@
-// Referencias
 const canvas = document.getElementById("canvas");
 const pieces = document.querySelectorAll(".piece");
 const downloadBtn = document.getElementById("downloadBtn");
+const colorButtons = document.querySelectorAll(".color-btn");
 
-// Verificación de canvas
-if (!canvas) {
-  console.error("No se encontró el canvas. Asegurate de agregar id='canvas' al div del stencil.");
-}
+let selectedColor = null;
 
-// Función para hacer arrastrable dentro del canvas
-function dragInsideCanvas(el) {
-  el.addEventListener("mousedown", (ev) => {
-    ev.preventDefault();
-    const offsetX = ev.offsetX;
-    const offsetY = ev.offsetY;
-
-    function mouseMoveHandler(eMove) {
-      el.style.left = eMove.clientX - canvas.getBoundingClientRect().left - offsetX + "px";
-      el.style.top = eMove.clientY - canvas.getBoundingClientRect().top - offsetY + "px";
-    }
-
-    function mouseUpHandler() {
-      document.removeEventListener("mousemove", mouseMoveHandler);
-      document.removeEventListener("mouseup", mouseUpHandler);
-    }
-
-    document.addEventListener("mousemove", mouseMoveHandler);
-    document.addEventListener("mouseup", mouseUpHandler);
+// ===== Selección de color =====
+colorButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    selectedColor = btn.getAttribute("data-color");
   });
+});
 
-  // Escalar con rueda del mouse
-  el.addEventListener("wheel", (ev) => {
+// ===== Arrastrar y soltar piezas =====
+pieces.forEach(piece => {
+  piece.setAttribute("draggable", true);
+
+  piece.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text", e.target.id);
+  });
+});
+
+canvas.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
+
+canvas.addEventListener("drop", (e) => {
+  e.preventDefault();
+  const id = e.dataTransfer.getData("text");
+  const piece = document.getElementById(id);
+  const newPiece = piece.cloneNode(true);
+
+  newPiece.style.position = "absolute";
+  newPiece.style.left = e.offsetX - piece.width / 2 + "px";
+  newPiece.style.top = e.offsetY - piece.height / 2 + "px";
+  newPiece.style.cursor = "grab";
+  newPiece.setAttribute("data-scale", 1);
+
+  // ===== Escalar la pieza con la rueda del mouse =====
+  newPiece.addEventListener("wheel", (ev) => {
     ev.preventDefault();
-    let scale = parseFloat(el.getAttribute("data-scale") || 1);
-
+    let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
     if (ev.deltaY < 0) {
       scale += 0.1; // agrandar
     } else {
       scale = Math.max(0.1, scale - 0.1); // achicar
     }
-
-    el.style.transform = `scale(${scale})`;
-    el.setAttribute("data-scale", scale);
+    newPiece.style.transform = `scale(${scale})`;
+    newPiece.setAttribute("data-scale", scale);
   });
-}
 
-// Agregar funcionalidad a las piezas del panel derecho
-pieces.forEach(piece => {
-  piece.addEventListener("mousedown", (e) => {
-    e.preventDefault();
+  // ===== Aplicar color seleccionado (solo si es negro por defecto) =====
+  if (selectedColor) {
+    switch(selectedColor) {
+      case "black": newPiece.style.filter = "none"; break;
+      case "red": newPiece.style.filter = "invert(19%) sepia(89%) saturate(4900%) hue-rotate(-5deg)"; break;
+      case "green": newPiece.style.filter = "invert(30%) sepia(26%) saturate(350%) hue-rotate(78deg)"; break;
+      case "blue": newPiece.style.filter = "invert(44%) sepia(24%) saturate(448%) hue-rotate(180deg)"; break;
+      case "yellow": newPiece.style.filter = "invert(96%) sepia(50%) saturate(500%) hue-rotate(0deg)"; break;
+    }
+  }
 
-    // Clonar la pieza
-    const newPiece = piece.cloneNode(true);
-    newPiece.style.position = "absolute";
-    newPiece.style.left = e.clientX - canvas.getBoundingClientRect().left - piece.width / 2 + "px";
-    newPiece.style.top = e.clientY - canvas.getBoundingClientRect().top - piece.height / 2 + "px";
-    newPiece.style.width = "120px"; // tamaño inicial
-    newPiece.style.height = "auto";
-    newPiece.setAttribute("data-scale", 1);
-
-    // Agregar al canvas
-    canvas.appendChild(newPiece);
-
-    // Hacer arrastrable y escalable
-    dragInsideCanvas(newPiece);
-  });
+  canvas.appendChild(newPiece);
 });
 
-// Descargar el collage como imagen
+// ===== Descargar el collage =====
 downloadBtn.addEventListener("click", () => {
   html2canvas(canvas).then((canvasExport) => {
     const link = document.createElement("a");
