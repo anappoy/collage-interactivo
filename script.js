@@ -1,70 +1,60 @@
-// Selección de elementos
-const canvas = document.getElementById('canvas');
-const fondo = document.getElementById('fondo');
-const piezas = document.querySelectorAll('#tray img');
-const downloadBtn = document.getElementById('download-btn');
+const canvas = document.getElementById("canvas");
+const pieces = document.querySelectorAll(".piece");
+const downloadBtn = document.getElementById("downloadBtn");
 
-let dragged = null;
-let offsetX = 0;
-let offsetY = 0;
+// Permitir soltar sobre el canvas
+canvas.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
 
-// ARRASTRAR PIEZAS DESDE LA BANDEJA
-piezas.forEach(pieza => {
-  pieza.addEventListener('dragstart', (e) => {
-    // clonamos la pieza
-    dragged = e.target.cloneNode(true);
-    dragged.classList.add('pieza-canvas');
+canvas.addEventListener("drop", (e) => {
+  e.preventDefault();
+  const id = e.dataTransfer.getData("text");
+  const piece = document.getElementById(id);
+  const newPiece = piece.cloneNode(true);
 
-    // valores iniciales de escala
-    dragged.dataset.scale = 1;
+  newPiece.style.position = "absolute";
+  newPiece.style.left = e.offsetX - piece.width / 2 + "px";
+  newPiece.style.top = e.offsetY - piece.height / 2 + "px";
 
-    // activar el arrastre dentro del canvas
-    dragged.addEventListener('mousedown', pieceMouseDown);
+  // Hacer que la pieza clonada también se pueda escalar
+  newPiece.addEventListener("wheel", (ev) => {
+    ev.preventDefault();
+    let scale = parseFloat(newPiece.getAttribute("data-scale") || 1);
 
-    // permitir zoom con la rueda
-    dragged.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      let scale = parseFloat(dragged.dataset.scale) || 1;
-      scale += e.deltaY * -0.001;
-      scale = Math.min(Math.max(0.5, scale), 2);
-      dragged.style.transform = `scale(${scale})`;
-      dragged.dataset.scale = scale;
-    });
+    if (ev.deltaY < 0) {
+      scale += 0.1; // agrandar
+    } else {
+      scale = Math.max(0.1, scale - 0.1); // achicar
+    }
 
-    // insertamos en el canvas
-    canvas.appendChild(dragged);
+    newPiece.style.transform = `scale(${scale})`;
+    newPiece.setAttribute("data-scale", scale);
+  });
 
-    // posición inicial
-    const rect = canvas.getBoundingClientRect();
-    dragged.style.left = `${e.clientX - rect.left - 40}px`;
-    dragged.style.top = `${e.clientY - rect.top - 40}px`;
+  canvas.appendChild(newPiece);
+});
+
+// Hacer que las piezas originales se puedan arrastrar
+pieces.forEach((piece) => {
+  piece.setAttribute("draggable", true);
+
+  piece.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text", e.target.id);
   });
 });
 
-// FUNCIONES DE ARRASTRE DENTRO DEL CANVAS
-function pieceMouseDown(e) {
-  dragged = e.target;
-  offsetX = e.offsetX;
-  offsetY = e.offsetY;
+// Descargar el collage como imagen
+downloadBtn.addEventListener("click", () => {
+  html2canvas(canvas).then((canvasExport) => {
+    const link = document.createElement("a");
+    link.download = "collage.png";
+    link.href = canvasExport.toDataURL("image/png");
+    link.click();
+  });
+});
 
-  document.addEventListener('mousemove', pieceMouseMove);
-  document.addEventListener('mouseup', pieceMouseUp);
-}
 
-function pieceMouseMove(e) {
-  if (!dragged) return;
-  const rect = canvas.getBoundingClientRect();
-  dragged.style.left = `${e.clientX - rect.left - offsetX}px`;
-  dragged.style.top = `${e.clientY - rect.top - offsetY}px`;
-}
-
-function pieceMouseUp(e) {
-  document.removeEventListener('mousemove', pieceMouseMove);
-  document.removeEventListener('mouseup', pieceMouseUp);
-  dragged = null;
-}
-
-// BOTÓN DE DESCARGA SIMULADO
 downloadBtn.addEventListener('click', () => {
   alert("¡Descargalo con garra! 🎉");
 });
