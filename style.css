@@ -49,7 +49,7 @@ h1 {
 
 /* Piezas individuales */
 .piece {
-  width: 120px;   /* tamaño inicial de las piezas */
+  width: 80px;   /* tamaño inicial de las piezas */
   height: auto;   /* mantiene proporción */
   cursor: grab;
 }
