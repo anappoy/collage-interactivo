@@ -29,7 +29,8 @@ h1 {
 
 /* Canvas (stencil) */
 .canvas {
-  flex: 0 0 auto;  /* no se estira */
+  flex: 0 0 auto;
+  position: relative; /* <--- esto hace que las piezas absolutas se posicionen sobre el stencil */
 }
 
 /* Stencil base */
