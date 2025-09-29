@@ -16,26 +16,29 @@ colorButtons.forEach(btn => {
 pieces.forEach(piece => {
   piece.setAttribute("draggable", true);
 
-  piece.addEventListener("dragstart", (e) => {
-    e.dataTransfer.setData("text", e.target.id);
-  });
+  piece.addEventListener("dragstart", e => {
+  e.dataTransfer.setData("text", e.target.id);
+});
 });
 
-canvas.addEventListener("dragover", (e) => {
-  e.preventDefault();
+canvas.addEventListener("dragover", e => e.preventDefault());
+
 });
 
-canvas.addEventListener("drop", (e) => {
+canvas.addEventListener("drop", e => {
   e.preventDefault();
   const id = e.dataTransfer.getData("text");
   const piece = document.getElementById(id);
   const newPiece = piece.cloneNode(true);
 
+  const rect = canvas.getBoundingClientRect();
   newPiece.style.position = "absolute";
-  newPiece.style.left = e.offsetX - piece.width / 2 + "px";
-  newPiece.style.top = e.offsetY - piece.height / 2 + "px";
-  newPiece.style.cursor = "grab";
-  newPiece.setAttribute("data-scale", 1);
+  newPiece.style.left = e.clientX - rect.left - piece.width/2 + "px";
+  newPiece.style.top  = e.clientY - rect.top  - piece.height/2 + "px";
+
+  canvas.appendChild(newPiece);
+});
+
 
   // Escalar la pieza con la rueda del mouse
   newPiece.addEventListener("wheel", (ev) => {
