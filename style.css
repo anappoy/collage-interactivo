@@ -1,21 +1,24 @@
+/* General */
 body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 20px;
 }
 
 h1 {
   margin-bottom: 20px;
 }
 
+/* Contenedor principal: canvas y bandeja */
 #container {
   display: flex;
   gap: 20px;
-  /* invertimos el orden para que la bandeja quede a la derecha */
-  flex-direction: row-reverse;
+  flex-direction: row-reverse; /* bandeja a la derecha */
 }
 
+/* Bandeja de piezas */
 #tray {
   width: 150px;
   border: 2px solid #333;
@@ -30,25 +33,28 @@ h1 {
   cursor: grab;
 }
 
+/* Canvas */
 #canvas {
-  width: 600px;
-  height: 400px;
+  width: 600px;         /* ancho proporcional al stencil */
+  height: 849px;        /* altura proporcional calculada */
   border: 2px dashed #333;
   position: relative;
   background-color: #f0f0f0;
   overflow: hidden;
 }
 
+/* Fondo (stencil) */
 #fondo {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* mantiene proporción y cubre el canvas */
+  object-fit: cover;   /* mantiene proporción y cubre todo el canvas */
   pointer-events: none;
 }
 
+/* Piezas arrastrables dentro del canvas */
 .pieza-canvas {
   position: absolute;
   cursor: grab;
