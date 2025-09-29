@@ -1,87 +1,93 @@
-/* Reset básico */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Cuerpo de la página */
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
-  background-color: #f5f5f5;
-}
-
-/* Título */
-h1 {
-  margin-bottom: 20px;
-}
-
-/* Contenedor principal para stencil + piezas */
-.main-container {
+  font-family: sans-serif;
   display: flex;
-  justify-content: center;  /* centra todo horizontalmente */
-  align-items: flex-start;  /* alinea arriba */
-  gap: 20px;               /* espacio entre stencil y piezas */
-  flex-wrap: wrap;          /* permite que se mueva a abajo si pantalla pequeña */
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 20px;
+  background: #f5f5f5;
 }
 
-/* Canvas (stencil) */
+h1 {
+  width: 100%;
+  text-align: center;
+}
+
+/* Canvas con stencil */
 .canvas {
-  flex: 0 0 auto;
-  position: relative; /* <--- esto hace que las piezas absolutas se posicionen sobre el stencil */
+  position: relative; /* importante para posicionar piezas absolutas */
+  width: 400px;       /* ancho del stencil */
+  max-width: 90vw;
+  height: auto;       
+  background: #fff;
+  border: 1px solid #ccc;
 }
 
-/* Stencil base */
-.stencil {
-  max-width: 600px;  /* ancho máximo */
-  height: auto;      /* mantiene proporción */
-  display: block;
+/* Piezas clonadas dentro del canvas */
+.canvas img {
+  cursor: grab;
 }
+
+/* Panel derecho: color + piezas */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Panel de colores */
+.color-picker {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Botones de color */
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #333;
+}
+
+/* Colores de tu paleta */
+.color-black { background: #000000; filter: none; }
+.color-red { background: #e91f1f; filter: invert(19%) sepia(89%) saturate(4900%) hue-rotate(-5deg); }
+.color-green { background: #4e7a47; filter: invert(30%) sepia(26%) saturate(350%) hue-rotate(78deg); }
+.color-blue { background: #629fbb; filter: invert(44%) sepia(24%) saturate(448%) hue-rotate(180deg); }
+.color-yellow { background: #f4e740; filter: invert(96%) sepia(50%) saturate(500%) hue-rotate(0deg); }
 
 /* Contenedor de piezas */
 .pieces-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
-  gap: 10px; /* espacio entre piezas */
-  max-width: 360px; /* opcional: ancho total del panel de piezas */
-  margin-left: 20px; /* opcional: separación del canvas */
-  align-items: stretch; /* fuerza que las filas tengan la misma altura */
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  gap: 10px;
+  max-width: 360px;
+  align-items: stretch; /* filas de igual altura */
 }
 
+/* Piezas del panel derecho */
 .piece {
-  width: 100%;       /* ocupa todo el ancho de la columna */
-  height: 100%;      /* ocupa toda la altura de la fila */
-  object-fit: contain; /* mantiene proporción de la imagen dentro del espacio */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   cursor: grab;
-}
-
-/* Piezas al arrastrar */
-.piece:active {
-  cursor: grabbing;
 }
 
 /* Botón de descarga */
 .actions {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
-button#downloadBtn {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #ff6600;
-  color: white;
-  border: none;
-  border-radius: 8px;
+#downloadBtn {
+  padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  background: #e91f1f;
+  border: none;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
 }
 
-button#downloadBtn:hover {
-  background-color: #e65500;
-}
 
-button#downloadBtn:hover {
-  background-color: #e65500;
-}
