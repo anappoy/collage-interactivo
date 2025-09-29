@@ -1,101 +1,37 @@
-/* ===== Estilos generales ===== */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background: #f5f5f5;
-}
-
-h1 {
-  text-align: center;
-}
-
-/* ===== Contenedor principal ===== */
 .main-container {
   display: flex;
   gap: 20px;
-  justify-content: center;
-  align-items: flex-start;
 }
 
-/* ===== Canvas con stencil ===== */
 .canvas {
   position: relative;
-  width: 600px; /* ajusta según tu stencil */
-  height: 850px; /* proporción aproximada 1200x1697 */
-  border: 2px solid #ccc;
-  background: white;
-  flex-shrink: 0;
-  overflow: hidden;
+  width: 600px;
+  height: 850px;
+  border: 1px solid #ccc;
 }
 
 .stencil {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display: block;
 }
 
-/* ===== Panel derecho ===== */
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 300px;
-}
-
-/* ===== Paleta de colores ===== */
-.color-picker {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.color-btn {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #333;
-  cursor: pointer;
-}
-
-.color-black { background: #000000; }
-.color-red   { background: #e91f1f; }
-.color-green { background: #4e7a47; }
-.color-blue  { background: #629fbb; }
-.color-yellow{ background: #f4e740; }
-
-/* ===== Contenedor de piezas ===== */
 .pieces-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 80px);
+  grid-auto-rows: 80px;
   gap: 10px;
-  max-height: 600px;
-  overflow-y: auto;
 }
 
 .pieces-container .piece {
   width: 80px;
-  height: 80px;           /* fuerza altura uniforme */
+  height: 80px;
   object-fit: contain;
   cursor: grab;
-  margin: auto;            /* centra horizontal y vertical */
   display: block;
-  pointer-events: auto;
+  margin: auto;
 }
 
-/* ===== Botón ===== */
-.actions {
-  text-align: center;
-}
-
-#downloadBtn {
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  background: #ffcc00;
-  border: none;
-  border-radius: 5px;
-}
 
 }
 
