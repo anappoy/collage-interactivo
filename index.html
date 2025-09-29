@@ -10,44 +10,60 @@
   <h1>Collage Interactivo</h1>
 
   <div class="main-container">
-  <!-- Canvas con stencil -->
-  <div class="canvas" id="canvas">
-    <img src="images/stencil-base.png" alt="Stencil base" class="stencil" />
-  </div>
-
-  <!-- Panel derecho: colores + piezas + botón -->
-  <div class="panel">
-    <!-- Panel de colores -->
-    <div class="color-picker">
-      <div class="color-btn color-black" data-color="black"></div>
-      <div class="color-btn color-red" data-color="red"></div>
-      <div class="color-btn color-green" data-color="green"></div>
-      <div class="color-btn color-blue" data-color="blue"></div>
-      <div class="color-btn color-yellow" data-color="yellow"></div>
+    <!-- Canvas con stencil -->
+    <div class="canvas" id="canvas">
+      <img src="images/stencil-base.png" alt="Stencil base" class="stencil" />
     </div>
 
-    <!-- Contenedor de piezas -->
-    <div id="pieces-container" class="pieces-container">
-      <img src="images/brush1.png" class="piece" id="brush1" />
-      <img src="images/brush2.png" class="piece" id="brush2" />
-      <img src="images/chuik.png" class="piece" id="chuik" />
-      <!-- ... el resto de piezas ... -->
-    </div>
+    <!-- Panel derecho: colores + piezas + botón -->
+    <div class="panel">
+      <!-- Paleta de colores -->
+      <div class="color-picker">
+        <div class="color-btn color-black" data-color="black"></div>
+        <div class="color-btn color-red" data-color="red"></div>
+        <div class="color-btn color-green" data-color="green"></div>
+        <div class="color-btn color-blue" data-color="blue"></div>
+        <div class="color-btn color-yellow" data-color="yellow"></div>
+      </div>
 
-    <!-- Botón de descarga -->
-    <div class="actions">
-      <button id="downloadBtn">¡Descargalo con garra!</button>
-    </div>
-  </div>
-</div>
+      <!-- Contenedor de piezas -->
+      <div id="pieces-container" class="pieces-container">
+        <img src="images/brush1.png" class="piece" id="brush1" />
+        <img src="images/brush2.png" class="piece" id="brush2" />
+        <img src="images/chuik.png" class="piece" id="chuik" />
+        <img src="images/comunidad.png" class="piece" id="comunidad" />
+        <img src="images/deseo.png" class="piece" id="deseo" />
+        <img src="images/faces1.png" class="piece" id="faces1" />
+        <img src="images/faces2.png" class="piece" id="faces2" />
+        <img src="images/gloves.png" class="piece" id="gloves" />
+        <img src="images/heart1.png" class="piece" id="heart1" />
+        <img src="images/heart2.png" class="piece" id="heart2" />
+        <img src="images/hospital.png" class="piece" id="hospital" />
+        <img src="images/infancia.png" class="piece" id="infancia" />
+        <img src="images/ninez.png" class="piece" id="ninez" />
+        <img src="images/orgullo.png" class="piece" id="orgullo" />
+        <img src="images/punio.png" class="piece" id="punio" />
+        <img src="images/star1.png" class="piece" id="star1" />
+        <img src="images/star2.png" class="piece" id="star2" />
+        <img src="images/star3.png" class="piece" id="star3" />
+        <img src="images/star4.png" class="piece" id="star4" />
+        <img src="images/star5.png" class="piece" id="star5" />
+        <img src="images/sun.png" class="piece" id="sun" />
+      </div>
 
-  <!-- Botón para descargar -->
-  <div class="actions">
-    <button id="downloadBtn">¡Descargalo con garra!</button>
+      <!-- Botón de descarga -->
+      <div class="actions">
+        <button id="downloadBtn">¡Descargalo con garra!</button>
+      </div>
+    </div>
   </div>
 
   <!-- Librería para convertir a imagen -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
   <!-- Tu JS -->
   <script src="script.js"></script>
 </body>
