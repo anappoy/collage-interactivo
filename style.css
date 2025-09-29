@@ -20,16 +20,16 @@ h1 {
 
 /* Bandeja de piezas */
 #tray {
-  width: 150px;
+  width: 160px;             /* un poco más ancho para dos columnas */
   border: 2px solid #333;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;            /* usamos grid para dos columnas */
+  grid-template-columns: 1fr 1fr;  /* dos columnas iguales */
+  gap: 10px;                /* espacio entre piezas */
 }
 
 #tray img {
-  width: 100px;
+  width: 70px;              /* piezas más pequeñas */
   cursor: grab;
 }
 
