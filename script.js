@@ -1,24 +1,27 @@
+// ===== Selecciones principales =====
 const canvas = document.getElementById("canvas");
-const pieces = document.querySelectorAll(".piece");
 const downloadBtn = document.getElementById("downloadBtn");
-
 const piecesContainer = document.getElementById("pieces-container");
-const pieces = Array.from(piecesContainer.querySelectorAll(".piece"));
 
+// ===== Ordenar panel derecho alfabéticamente por nombre y color =====
+let piecesArray = Array.from(piecesContainer.children);
 
-
-// ===== Click para clonar piezas =====
-pieces.forEach(piece => {
-  piece.addEventListener("mousedown", createClone);
-  piece.addEventListener("touchstart", createCloneTouch, {passive:false});
+piecesArray.sort((a, b) => {
+  const [nameA, colorA] = a.id.split('_');
+  const [nameB, colorB] = b.id.split('_');
+  if (nameA === nameB) return colorA.localeCompare(colorB);
+  return nameA.localeCompare(nameB);
 });
 
+piecesContainer.innerHTML = "";
+piecesArray.forEach(piece => piecesContainer.appendChild(piece));
+
+// ===== Funciones de clonación =====
 function createClone(e) {
   e.preventDefault();
   const piece = e.target.cloneNode(true);
   piece.classList.add("cloned");
-
-  // quitar width/height absolutas que podrían distorsionar
+  piece.style.position = "absolute";
   piece.style.width = "80px";
   piece.style.height = "auto";
 
@@ -27,11 +30,11 @@ function createClone(e) {
 
   piece.setAttribute("data-scale", 1);
   piece.setAttribute("data-rotation", 0);
+  piece.style.zIndex = 10;
 
   canvas.appendChild(piece);
   enableDrag(piece);
 }
-
 
 function createCloneTouch(e) {
   e.preventDefault();
@@ -40,7 +43,7 @@ function createCloneTouch(e) {
   piece.classList.add("cloned");
   piece.style.position = "absolute";
   piece.style.width = "80px";
-  piece.style.height = "80px";
+  piece.style.height = "auto";
 
   piece.style.left = touch.clientX - canvas.getBoundingClientRect().left - 40 + "px";
   piece.style.top  = touch.clientY - canvas.getBoundingClientRect().top - 40 + "px";
@@ -50,17 +53,23 @@ function createCloneTouch(e) {
   piece.style.zIndex = 10;
 
   canvas.appendChild(piece);
-
   enableDrag(piece);
 }
 
-// ===== Función que permite arrastrar cualquier clon =====
+// ===== Asignar listeners a piezas del panel derecho =====
+piecesArray.forEach(piece => {
+  piece.addEventListener("mousedown", createClone);
+  piece.addEventListener("touchstart", createCloneTouch, {passive:false});
+});
+
+// ===== Función para habilitar drag y touch a cualquier clon =====
 function enableDrag(element) {
   element.addEventListener("mousedown", dragStart);
   element.addEventListener("touchstart", dragStartTouch, {passive:false});
   element.addEventListener("wheel", scaleRotate);
 }
 
+// ===== Drag con mouse =====
 function dragStart(e) {
   e.preventDefault();
   const element = e.target;
@@ -87,11 +96,11 @@ function dragStart(e) {
   window.addEventListener("mouseup", up);
 }
 
+// ===== Drag con touch =====
 function dragStartTouch(e) {
   e.preventDefault();
   const element = e.target;
   const touch = e.touches[0];
-
   let offsetX = touch.clientX - element.getBoundingClientRect().left;
   let offsetY = touch.clientY - element.getBoundingClientRect().top;
 
@@ -119,11 +128,11 @@ function dragStartTouch(e) {
 // ===== Escalar y rotar con rueda =====
 function scaleRotate(ev) {
   ev.preventDefault();
-  let element = ev.target;
+  const element = ev.target;
   let scale = parseFloat(element.getAttribute("data-scale")) || 1;
   let rotation = parseFloat(element.getAttribute("data-rotation")) || 0;
 
-  if (ev.shiftKey) rotation += ev.deltaY < 0 ? 5 : -5;
+  if (ev.altKey) rotation += ev.deltaY < 0 ? 5 : -5; // ALT para rotar
   else {
     scale += ev.deltaY < 0 ? 0.1 : -0.1;
     scale = Math.max(0.1, scale);
@@ -137,47 +146,18 @@ function scaleRotate(ev) {
 // ===== Click derecho para eliminar =====
 canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
-  if(e.target.classList.contains("cloned")) {
-    e.target.remove();
-  }
+  if (e.target.classList.contains("cloned")) e.target.remove();
 });
 
-
-// ===== Cambiar el orden (traer adelante / enviar atrás) =====
+// ===== Click para traer adelante/enviar atrás =====
 canvas.addEventListener("click", (e) => {
-  if (e.target.classList.contains("cloned")) {
-    if (e.ctrlKey) { // Ctrl + click → enviar atrás
-      e.target.style.zIndex = Math.max(1, parseInt(e.target.style.zIndex) - 1);
-    } else { // click normal → traer adelante
-      e.target.style.zIndex = parseInt(e.target.style.zIndex) + 1;
-    }
+  if (!e.target.classList.contains("cloned")) return;
+  if (e.ctrlKey) { // Ctrl + click → enviar atrás
+    e.target.style.zIndex = Math.max(1, parseInt(e.target.style.zIndex) - 1);
+  } else { // click normal → traer adelante
+    e.target.style.zIndex = parseInt(e.target.style.zIndex) + 1;
   }
 });
-
-// Selecciona el contenedor de piezas
-const piecesContainer = document.getElementById("pieces-container");
-
-// Convierte los elementos HTMLCollection/NodeList a array
-let piecesArray = Array.from(piecesContainer.children);
-
-// Ordena alfabéticamente por ID
-piecesArray.sort((a, b) => {
-  const [nameA, colorA] = a.id.split('_'); // divide "brush1_black" → ["brush1","black"]
-  const [nameB, colorB] = b.id.split('_');
-
-  if (nameA === nameB) {
-    return colorA.localeCompare(colorB); // si son el mismo nombre, ordena por color
-  } else {
-    return nameA.localeCompare(nameB); // si no, ordena por nombre
-  }
-});
-
-
-// Vacía el contenedor y agrega los elementos ordenados
-piecesContainer.innerHTML = "";
-piecesArray.forEach(piece => piecesContainer.appendChild(piece));
-
-
 
 // ===== Descargar canvas =====
 downloadBtn.addEventListener("click", () => {
@@ -189,7 +169,6 @@ downloadBtn.addEventListener("click", () => {
   });
   alert("¡Descargalo con garra! 🎉");
 });
-
 
 
 
