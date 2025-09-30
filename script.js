@@ -2,6 +2,17 @@ const canvas = document.getElementById("canvas");
 const pieces = document.querySelectorAll(".piece");
 const downloadBtn = document.getElementById("downloadBtn");
 
+const piecesContainer = document.getElementById("pieces-container");
+const pieces = Array.from(piecesContainer.querySelectorAll(".piece"));
+
+// Ordenar alfabéticamente por id
+pieces.sort((a, b) => a.id.localeCompare(b.id));
+
+// Limpiar y volver a agregar en orden
+piecesContainer.innerHTML = "";
+pieces.forEach(piece => piecesContainer.appendChild(piece));
+
+
 // ===== Click para clonar piezas =====
 pieces.forEach(piece => {
   piece.addEventListener("mousedown", createClone);
