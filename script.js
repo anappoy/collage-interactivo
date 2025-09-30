@@ -161,7 +161,17 @@ const piecesContainer = document.getElementById("pieces-container");
 let piecesArray = Array.from(piecesContainer.children);
 
 // Ordena alfabéticamente por ID
-piecesArray.sort((a, b) => a.id.localeCompare(b.id));
+piecesArray.sort((a, b) => {
+  const [nameA, colorA] = a.id.split('_'); // divide "brush1_black" → ["brush1","black"]
+  const [nameB, colorB] = b.id.split('_');
+
+  if (nameA === nameB) {
+    return colorA.localeCompare(colorB); // si son el mismo nombre, ordena por color
+  } else {
+    return nameA.localeCompare(nameB); // si no, ordena por nombre
+  }
+});
+
 
 // Vacía el contenedor y agrega los elementos ordenados
 piecesContainer.innerHTML = "";
