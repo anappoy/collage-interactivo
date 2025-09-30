@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createDraggableClone(piece) {
     const clone = piece.cloneNode(true);
     clone.classList.add("cloned");
+    clone.style.position = "absolute";
     clone.style.left = "50px";
     clone.style.top = "50px";
     clone.style.width = "80px";
@@ -14,9 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clone.addEventListener("mousedown", (e) => {
       isDragging = true;
-      const rect = clone.getBoundingClientRect();
-      offsetX = e.clientX - rect.left;
-      offsetY = e.clientY - rect.top;
+      offsetX = e.clientX - clone.getBoundingClientRect().left;
+      offsetY = e.clientY - clone.getBoundingClientRect().top;
       clone.style.zIndex = 1000;
     });
 
@@ -44,9 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   pieces.forEach(piece => {
-    piece.addEventListener("click", () => createDraggableClone(piece));
+    piece.addEventListener("click", () => {
+      createDraggableClone(piece);
+    });
   });
 
+  // Botón de descarga
   const downloadBtn = document.getElementById("downloadBtn");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
@@ -59,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
 
 
