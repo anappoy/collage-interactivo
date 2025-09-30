@@ -1,77 +1,97 @@
 const canvas = document.getElementById("canvas");
 const pieces = document.querySelectorAll(".piece");
 const downloadBtn = document.getElementById("downloadBtn");
-const colorButtons = document.querySelectorAll(".color-btn");
 
-let selectedColor = null;
-
-// ===== Selección de color =====
-colorButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    selectedColor = btn.getAttribute("data-color");
-  });
-});
-
-// ===== Drag & Drop =====
+// ===== Drag & Drop dentro del canvas =====
 pieces.forEach(piece => {
-  piece.setAttribute("draggable", true);
-  piece.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text", e.target.id);
-  });
+  piece.addEventListener("mousedown", startDrag);
+  piece.addEventListener("touchstart", startDragTouch, {passive:false});
 });
 
-canvas.addEventListener("dragover", e => e.preventDefault());
-
-canvas.addEventListener("drop", e => {
+function startDrag(e) {
   e.preventDefault();
-  const id = e.dataTransfer.getData("text");
-  const piece = document.getElementById(id);
-  const newPiece = piece.cloneNode(true);
+  const piece = e.target.cloneNode(true);
+  piece.style.position = "absolute";
+  piece.style.left = e.offsetX - piece.width/2 + "px";
+  piece.style.top  = e.offsetY - piece.height/2 + "px";
+  piece.setAttribute("data-scale", 1);
+  piece.setAttribute("data-rotation", 0);
+  piece.style.zIndex = 10;
+  canvas.appendChild(piece);
 
-  const rect = canvas.getBoundingClientRect();
-  newPiece.style.position = "absolute";
-  newPiece.style.left = e.clientX - rect.left - piece.width/2 + "px";
-  newPiece.style.top = e.clientY - rect.top - piece.height/2 + "px";
+  dragElement(piece, e);
+}
 
-  // Escalar y rotar
-  newPiece.setAttribute("data-scale", 1);
-  newPiece.setAttribute("data-rotation", 0);
-  newPiece.addEventListener("wheel", ev => {
-    ev.preventDefault();
-    let scale = parseFloat(newPiece.getAttribute("data-scale"));
-    let rotation = parseFloat(newPiece.getAttribute("data-rotation"));
-    if (ev.shiftKey) rotation += ev.deltaY < 0 ? 5 : -5;
-    else {
-      scale += ev.deltaY < 0 ? 0.1 : -0.1;
-      scale = Math.max(0.1, scale);
-    }
-    newPiece.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
-    newPiece.setAttribute("data-scale", scale);
-    newPiece.setAttribute("data-rotation", rotation);
-  });
+function startDragTouch(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const piece = e.target.cloneNode(true);
+  piece.style.position = "absolute";
+  piece.style.left = touch.clientX - piece.width/2 + "px";
+  piece.style.top  = touch.clientY - piece.height/2 + "px";
+  piece.setAttribute("data-scale", 1);
+  piece.setAttribute("data-rotation", 0);
+  piece.style.zIndex = 10;
+  canvas.appendChild(piece);
 
-  // Aplicar color
-  if (selectedColor) {
-    switch(selectedColor){
-      case "black": newPiece.style.filter = "none"; break;
-      case "red": newPiece.style.filter = "invert(19%) sepia(89%) saturate(4900%) hue-rotate(-5deg)"; break;
-      case "green": newPiece.style.filter = "invert(30%) sepia(26%) saturate(350%) hue-rotate(78deg)"; break;
-      case "blue": newPiece.style.filter = "invert(44%) sepia(24%) saturate(448%) hue-rotate(180deg)"; break;
-      case "yellow": newPiece.style.filter = "invert(96%) sepia(50%) saturate(500%) hue-rotate(0deg)"; break;
-    }
+  dragElementTouch(piece, touch);
+}
+
+// ===== Funciones de movimiento =====
+function dragElement(element, eStart) {
+  let startX = eStart.clientX;
+  let startY = eStart.clientY;
+  let rect = element.getBoundingClientRect();
+  let offsetX = startX - rect.left;
+  let offsetY = startY - rect.top;
+
+  function move(e) {
+    element.style.left = e.clientX - offsetX + "px";
+    element.style.top  = e.clientY - offsetY + "px";
   }
 
-  canvas.appendChild(newPiece);
-});
+  function up() {
+    window.removeEventListener("mousemove", move);
+    window.removeEventListener("mouseup", up);
+  }
 
-// ===== Descargar =====
-downloadBtn.addEventListener("click", () => {
-  html2canvas(canvas).then(canvasExport => {
-    const link = document.createElement("a");
-    link.download = "collage.png";
-    link.href = canvasExport.toDataURL("image/png");
-    link.click();
-  });
-  alert("¡Descargalo con garra! 🎉");
-});
+  window.addEventListener("mousemove", move);
+  window.addEventListener("mouseup", up);
+
+  // Escalar y rotar con rueda
+  element.addEventListener("wheel", scaleRotate);
+}
+
+function dragElementTouch(element, touchStart) {
+  function move(e) {
+    const touch = e.touches[0];
+    element.style.left = touch.clientX - element.width/2 + "px";
+    element.style.top  = touch.clientY - element.height/2 + "px";
+  }
+
+  function end() {
+    window.removeEventListener("touchmove", move);
+    window.removeEventListener("touchend", end);
+  }
+
+  window.addEventListener("touchmove", move, {passive:false});
+  window.addEventListener("touchend", end);
+  element.addEventListener("wheel", scaleRotate);
+}
+
+// ===== Escalar y rotar con rueda =====
+function scaleRotate(ev) {
+  ev.preventDefault();
+  let element = ev.target;
+  let scale = parseFloat(element.getAttribute("data-scale")) || 1;
+  let rotation = parseFloat(element.getAttribute("data-rotation")) || 0;
+
+  if (ev.shiftKey) rotation += ev.deltaY < 0 ? 5 : -5;
+  else {
+    scale += ev.deltaY < 0 ? 0.1 : -0.1;
+    scale = Math.max(0.1, scale);
+  }
+
+  element
+
 
