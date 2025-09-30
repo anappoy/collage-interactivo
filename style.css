@@ -15,21 +15,20 @@ h1 {
 /* ===== Contenedor principal ===== */
 .main-container {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center; /* 👈 centra todo horizontalmente */
-  align-items: flex-start; /* opcional, mantiene la parte superior alineada */
+  justify-content: center; /* centra todo horizontalmente */
+  align-items: flex-start; /* alinea arriba */
+  gap: 40px; /* espacio entre stencil y paleta */
+  flex-wrap: wrap; /* si la pantalla es chica, se acomodan abajo */
 }
 
 
-
-/* Canvas */
+/* ===== Canvas con stencil ===== */
 .canvas {
-  position: relative;
   width: 600px;
   height: 850px;
   border: 1px solid #ccc;
   background: #fff;
+  flex-shrink: 0; /* no se achica */
 }
 
 .stencil {
@@ -43,23 +42,22 @@ h1 {
   z-index: 0;
 }
 
-/* Panel derecho */
+/* ===== Panel derecho / piezas ===== */
 .panel {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 300px;
+  width: 350px; /* ancho del panel de piezas */
+  flex-shrink: 0; /* no se achica */
 }
 
-/* ===== Contenedor de piezas ===== */
 .pieces-container {
   display: grid;
-  grid-template-columns: repeat(4, 80px); /* 👈 ahora 4 columnas */
+  grid-template-columns: repeat(4, 80px); /* 4 columnas */
   grid-auto-rows: 80px;
   gap: 10px;
-  justify-content: center; /* opcional: centra la grilla dentro del panel */
+  justify-content: center; /* centra la grilla dentro del panel */
 }
-
 
 .pieces-container .piece {
   width: 80px;       /* solo ancho */
