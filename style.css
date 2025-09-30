@@ -12,11 +12,16 @@ h1 {
   letter-spacing: 2px;
 }
 
-/* Contenedor principal */
+/* ===== Contenedor principal ===== */
 .main-container {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center; /* 👈 centra todo horizontalmente */
+  align-items: flex-start; /* opcional, mantiene la parte superior alineada */
 }
+
+
 
 /* Canvas */
 .canvas {
@@ -46,13 +51,15 @@ h1 {
   width: 300px;
 }
 
-/* Piezas */
+/* ===== Contenedor de piezas ===== */
 .pieces-container {
   display: grid;
-  grid-template-columns: repeat(3, 80px);
+  grid-template-columns: repeat(4, 80px); /* 👈 ahora 4 columnas */
   grid-auto-rows: 80px;
   gap: 10px;
+  justify-content: center; /* opcional: centra la grilla dentro del panel */
 }
+
 
 .pieces-container .piece {
   width: 80px;       /* solo ancho */
