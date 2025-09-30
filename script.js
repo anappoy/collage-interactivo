@@ -2,6 +2,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const pieces = document.querySelectorAll(".piece");
   const canvas = document.getElementById("canvas");
 
+  .stencil {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none; /* 👈 esto lo hace "invisible" a los clics */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* stencil al fondo */
+}
+.cloned {
+  position: absolute;
+  z-index: 10; /* clones arriba del stencil */
+  cursor: move;
+}
+
+
   // Crear clon arrastrable
   function createDraggableClone(piece) {
     const clone = piece.cloneNode(true);
