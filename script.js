@@ -5,12 +5,6 @@ const downloadBtn = document.getElementById("downloadBtn");
 const piecesContainer = document.getElementById("pieces-container");
 const pieces = Array.from(piecesContainer.querySelectorAll(".piece"));
 
-// Ordenar alfabéticamente por id
-pieces.sort((a, b) => a.id.localeCompare(b.id));
-
-// Limpiar y volver a agregar en orden
-piecesContainer.innerHTML = "";
-pieces.forEach(piece => piecesContainer.appendChild(piece));
 
 
 // ===== Click para clonar piezas =====
@@ -159,6 +153,19 @@ canvas.addEventListener("click", (e) => {
     }
   }
 });
+
+// Selecciona el contenedor de piezas
+const piecesContainer = document.getElementById("pieces-container");
+
+// Convierte los elementos HTMLCollection/NodeList a array
+let piecesArray = Array.from(piecesContainer.children);
+
+// Ordena alfabéticamente por ID
+piecesArray.sort((a, b) => a.id.localeCompare(b.id));
+
+// Vacía el contenedor y agrega los elementos ordenados
+piecesContainer.innerHTML = "";
+piecesArray.forEach(piece => piecesContainer.appendChild(piece));
 
 
 
