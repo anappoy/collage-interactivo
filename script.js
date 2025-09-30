@@ -1,59 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
   const pieces = document.querySelectorAll(".piece");
-  const stencilContainer = document.getElementById("stencil-container");
+  const canvas = document.getElementById("canvas");
 
-  // función para crear clon arrastrable
+  // Crear clon arrastrable
   function createDraggableClone(piece) {
     const clone = piece.cloneNode(true);
     clone.classList.add("cloned");
     clone.style.position = "absolute";
     clone.style.left = "50px";
     clone.style.top = "50px";
-    clone.style.maxWidth = "100px"; // 👈 tamaño fijo
-    clone.style.maxHeight = "100px";
-    clone.draggable = true;
+    clone.style.width = "80px";
+    clone.style.height = "80px";
+    clone.style.cursor = "move";
 
-    // eventos de arrastre
-    clone.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/plain", null);
-      e.target.classList.add("dragging");
+    let offsetX, offsetY, isDragging = false;
+
+    // Mouse down → empezar a arrastrar
+    clone.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.offsetX;
+      offsetY = e.offsetY;
+      clone.style.zIndex = 1000;
     });
 
-    clone.addEventListener("dragend", (e) => {
-      e.target.classList.remove("dragging");
+    // Mouse move → mover mientras arrastro
+    document.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        const rect = canvas.getBoundingClientRect();
+        let x = e.clientX - rect.left - offsetX;
+        let y = e.clientY - rect.top - offsetY;
 
-      // posición donde soltó el mouse
-      const rect = stencilContainer.getBoundingClientRect();
-      const x = e.pageX - rect.left - clone.offsetWidth / 2;
-      const y = e.pageY - rect.top - clone.offsetHeight / 2;
+        // Limitar dentro del canvas
+        x = Math.max(0, Math.min(x, rect.width - clone.offsetWidth));
+        y = Math.max(0, Math.min(y, rect.height - clone.offsetHeight));
 
-      // limitar dentro del stencil
-      clone.style.left = `${Math.max(0, Math.min(x, rect.width - clone.offsetWidth))}px`;
-      clone.style.top = `${Math.max(0, Math.min(y, rect.height - clone.offsetHeight))}px`;
+        clone.style.left = `${x}px`;
+        clone.style.top = `${y}px`;
+      }
     });
 
-    stencilContainer.appendChild(clone);
+    // Mouse up → soltar
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      clone.style.zIndex = 10;
+    });
+
+    canvas.appendChild(clone);
   }
 
-  // click en pieza para clonar
+  // Click en pieza para clonar
   pieces.forEach((piece) => {
     piece.addEventListener("click", () => {
       createDraggableClone(piece);
     });
   });
 
-  // botón descargar como imagen
-  const downloadBtn = document.getElementById("download-btn");
+  // Botón descargar
+  const downloadBtn = document.getElementById("downloadBtn");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
-      html2canvas(stencilContainer).then((canvas) => {
+      html2canvas(canvas).then((canvasEl) => {
         const link = document.createElement("a");
-        link.download = "stencil.png";
-        link.href = canvas.toDataURL("image/png");
+        link.download = "collage.png";
+        link.href = canvasEl.toDataURL("image/png");
         link.click();
       });
     });
   }
+});
+
 });
 
 
