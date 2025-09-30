@@ -55,8 +55,8 @@ h1 {
 }
 
 .pieces-container .piece {
-  width: 80px;
-  height: 80px;
+  width: 80px;       /* solo ancho */
+  height: auto;      /* altura automática según proporción */
   object-fit: contain;
   cursor: grab;
   display: block;
@@ -64,15 +64,14 @@ h1 {
   user-select: none;
   touch-action: none;
 }
-
-/* Clones */
 .cloned {
-  position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 80px;       /* ancho inicial de los clones */
+  height: auto;      /* altura automática */
   cursor: move;
+  position: absolute;
   z-index: 10;
 }
+
 
 /* Botón */
 .actions {
