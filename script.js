@@ -2,7 +2,7 @@ const canvas = document.getElementById("canvas");
 const pieces = document.querySelectorAll(".piece");
 const downloadBtn = document.getElementById("downloadBtn");
 
-// ===== Drag & Drop dentro del canvas =====
+// ===== Crear clon y arrastrar =====
 pieces.forEach(piece => {
   piece.addEventListener("mousedown", startDrag);
   piece.addEventListener("touchstart", startDragTouch, {passive:false});
@@ -10,44 +10,45 @@ pieces.forEach(piece => {
 
 function startDrag(e) {
   e.preventDefault();
-  const piece = e.target.cloneNode(true);
-  piece.style.position = "absolute";
-  piece.style.left = e.offsetX - piece.width/2 + "px";
-  piece.style.top  = e.offsetY - piece.height/2 + "px";
-  piece.setAttribute("data-scale", 1);
-  piece.setAttribute("data-rotation", 0);
-  piece.style.zIndex = 10;
-  canvas.appendChild(piece);
-
-  dragElement(piece, e);
+  const clone = pieceClone(e.target, e.clientX, e.clientY);
+  canvas.appendChild(clone);
+  dragElement(clone, e);
 }
 
 function startDragTouch(e) {
   e.preventDefault();
   const touch = e.touches[0];
-  const piece = e.target.cloneNode(true);
-  piece.style.position = "absolute";
-  piece.style.left = touch.clientX - piece.width/2 + "px";
-  piece.style.top  = touch.clientY - piece.height/2 + "px";
-  piece.setAttribute("data-scale", 1);
-  piece.setAttribute("data-rotation", 0);
-  piece.style.zIndex = 10;
-  canvas.appendChild(piece);
-
-  dragElementTouch(piece, touch);
+  const clone = pieceClone(e.target, touch.clientX, touch.clientY);
+  canvas.appendChild(clone);
+  dragElementTouch(clone, touch);
 }
 
-// ===== Funciones de movimiento =====
+function pieceClone(piece, x, y) {
+  const clone = piece.cloneNode(true);
+  clone.classList.add("cloned");
+  clone.style.left = x - 40 + "px"; // 40 = mitad de 80px
+  clone.style.top  = y - 40 + "px";
+  clone.setAttribute("data-scale", 1);
+  clone.setAttribute("data-rotation", 0);
+  return clone;
+}
+
+// ===== Drag con mouse =====
 function dragElement(element, eStart) {
-  let startX = eStart.clientX;
-  let startY = eStart.clientY;
-  let rect = element.getBoundingClientRect();
-  let offsetX = startX - rect.left;
-  let offsetY = startY - rect.top;
+  let offsetX = eStart.clientX - element.getBoundingClientRect().left;
+  let offsetY = eStart.clientY - element.getBoundingClientRect().top;
 
   function move(e) {
-    element.style.left = e.clientX - offsetX + "px";
-    element.style.top  = e.clientY - offsetY + "px";
+    let x = e.clientX - offsetX;
+    let y = e.clientY - offsetY;
+
+    // Limitar dentro canvas
+    const rect = canvas.getBoundingClientRect();
+    x = Math.max(0, Math.min(x, rect.width - element.offsetWidth));
+    y = Math.max(0, Math.min(y, rect.height - element.offsetHeight));
+
+    element.style.left = x + "px";
+    element.style.top = y + "px";
   }
 
   function up() {
@@ -57,16 +58,22 @@ function dragElement(element, eStart) {
 
   window.addEventListener("mousemove", move);
   window.addEventListener("mouseup", up);
-
-  // Escalar y rotar con rueda
   element.addEventListener("wheel", scaleRotate);
 }
 
+// ===== Drag con touch =====
 function dragElementTouch(element, touchStart) {
   function move(e) {
     const touch = e.touches[0];
-    element.style.left = touch.clientX - element.width/2 + "px";
-    element.style.top  = touch.clientY - element.height/2 + "px";
+    let x = touch.clientX - 40;
+    let y = touch.clientY - 40;
+
+    const rect = canvas.getBoundingClientRect();
+    x = Math.max(0, Math.min(x, rect.width - element.offsetWidth));
+    y = Math.max(0, Math.min(y, rect.height - element.offsetHeight));
+
+    element.style.left = x + "px";
+    element.style.top  = y + "px";
   }
 
   function end() {
@@ -79,7 +86,7 @@ function dragElementTouch(element, touchStart) {
   element.addEventListener("wheel", scaleRotate);
 }
 
-// ===== Escalar y rotar con rueda =====
+// ===== Escalar y rotar =====
 function scaleRotate(ev) {
   ev.preventDefault();
   let element = ev.target;
@@ -97,7 +104,7 @@ function scaleRotate(ev) {
   element.setAttribute("data-rotation", rotation);
 }
 
-// ===== Descargar canvas =====
+// ===== Descargar =====
 downloadBtn.addEventListener("click", () => {
   html2canvas(canvas).then(canvasExport => {
     const link = document.createElement("a");
