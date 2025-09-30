@@ -78,6 +78,21 @@ h1 {
   z-index: 10;
 }
 
+.instructions {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background: #fefefe;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.instructions h3 {
+  margin-top: 0;
+  font-size: 16px;
+  text-align: center;
+}
+
 
 /* Botón */
 .actions {
