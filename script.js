@@ -92,6 +92,21 @@ function scaleRotate(ev) {
     scale = Math.max(0.1, scale);
   }
 
-  element
+  element.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+  element.setAttribute("data-scale", scale);
+  element.setAttribute("data-rotation", rotation);
+}
+
+// ===== Descargar canvas =====
+downloadBtn.addEventListener("click", () => {
+  html2canvas(canvas).then(canvasExport => {
+    const link = document.createElement("a");
+    link.download = "collage.png";
+    link.href = canvasExport.toDataURL("image/png");
+    link.click();
+  });
+  alert("¡Descargalo con garra! 🎉");
+});
+
 
 
