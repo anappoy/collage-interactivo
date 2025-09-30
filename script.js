@@ -129,6 +129,27 @@ function scaleRotate(ev) {
   element.setAttribute("data-rotation", rotation);
 }
 
+// ===== Click derecho para eliminar =====
+canvas.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+  if(e.target.classList.contains("cloned")) {
+    e.target.remove();
+  }
+});
+
+
+// ===== Cambiar el orden (traer adelante / enviar atrás) =====
+canvas.addEventListener("click", (e) => {
+  if(e.target.classList.contains("cloned")) {
+    if(e.shiftKey) { // shift + click → enviar atrás
+      e.target.style.zIndex = parseInt(e.target.style.zIndex) - 1;
+    } else { // click normal → traer adelante
+      e.target.style.zIndex = parseInt(e.target.style.zIndex) + 1;
+    }
+  }
+});
+
+
 // ===== Descargar canvas =====
 downloadBtn.addEventListener("click", () => {
   html2canvas(canvas).then(canvasExport => {
