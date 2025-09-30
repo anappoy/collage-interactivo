@@ -12,21 +12,21 @@ function createClone(e) {
   e.preventDefault();
   const piece = e.target.cloneNode(true);
   piece.classList.add("cloned");
-  piece.style.position = "absolute";
+
+  // quitar width/height absolutas que podrían distorsionar
   piece.style.width = "80px";
-  piece.style.height = "80px";
+  piece.style.height = "auto";
 
   piece.style.left = e.clientX - canvas.getBoundingClientRect().left - 40 + "px";
   piece.style.top  = e.clientY - canvas.getBoundingClientRect().top - 40 + "px";
 
   piece.setAttribute("data-scale", 1);
   piece.setAttribute("data-rotation", 0);
-  piece.style.zIndex = 10;
 
   canvas.appendChild(piece);
-
   enableDrag(piece);
 }
+
 
 function createCloneTouch(e) {
   e.preventDefault();
