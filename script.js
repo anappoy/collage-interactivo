@@ -5,12 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function createDraggableClone(piece) {
     const clone = piece.cloneNode(true);
     clone.classList.add("cloned");
-    clone.style.position = "absolute";
     clone.style.left = "50px";
     clone.style.top = "50px";
     clone.style.width = "80px";
     clone.style.height = "80px";
-    clone.style.cursor = "move";
 
     let offsetX = 0, offsetY = 0, isDragging = false;
 
@@ -45,16 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.appendChild(clone);
   }
 
-  pieces.forEach((piece) => {
-    piece.addEventListener("click", () => {
-      createDraggableClone(piece);
-    });
+  pieces.forEach(piece => {
+    piece.addEventListener("click", () => createDraggableClone(piece));
   });
 
   const downloadBtn = document.getElementById("downloadBtn");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", () => {
-      html2canvas(canvas).then((canvasEl) => {
+      html2canvas(canvas).then(canvasEl => {
         const link = document.createElement("a");
         link.download = "collage.png";
         link.href = canvasEl.toDataURL("image/png");
