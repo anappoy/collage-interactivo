@@ -1,69 +1,59 @@
-canvas.addEventListener("drop", e => {
-  e.preventDefault();
-  const id = e.dataTransfer.getData("text");
-  const piece = document.getElementById(id);
+document.addEventListener("DOMContentLoaded", () => {
+  const pieces = document.querySelectorAll(".piece");
+  const stencilContainer = document.getElementById("stencil-container");
 
-  if (!piece) return;
+  // función para crear clon arrastrable
+  function createDraggableClone(piece) {
+    const clone = piece.cloneNode(true);
+    clone.classList.add("cloned");
+    clone.style.position = "absolute";
+    clone.style.left = "50px";
+    clone.style.top = "50px";
+    clone.style.maxWidth = "100px"; // 👈 tamaño fijo
+    clone.style.maxHeight = "100px";
+    clone.draggable = true;
 
-  // Crear clon
-  const newPiece = piece.cloneNode(true);
+    // eventos de arrastre
+    clone.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", null);
+      e.target.classList.add("dragging");
+    });
 
-  const rect = canvas.getBoundingClientRect();
-  newPiece.style.position = "absolute";
-  newPiece.style.left = e.clientX - rect.left - piece.width / 2 + "px";
-  newPiece.style.top = e.clientY - rect.top - piece.height / 2 + "px";
-  newPiece.style.cursor = "move";
+    clone.addEventListener("dragend", (e) => {
+      e.target.classList.remove("dragging");
 
-  // Atributos iniciales
-  newPiece.setAttribute("data-scale", 1);
-  newPiece.setAttribute("data-rotation", 0);
+      // posición donde soltó el mouse
+      const rect = stencilContainer.getBoundingClientRect();
+      const x = e.pageX - rect.left - clone.offsetWidth / 2;
+      const y = e.pageY - rect.top - clone.offsetHeight / 2;
 
-  // Arrastrar dentro del canvas
-  let isDragging = false;
-  let offsetX, offsetY;
+      // limitar dentro del stencil
+      clone.style.left = `${Math.max(0, Math.min(x, rect.width - clone.offsetWidth))}px`;
+      clone.style.top = `${Math.max(0, Math.min(y, rect.height - clone.offsetHeight))}px`;
+    });
 
-  newPiece.addEventListener("mousedown", ev => {
-    isDragging = true;
-    offsetX = ev.offsetX;
-    offsetY = ev.offsetY;
-    newPiece.style.zIndex = Date.now();
+    stencilContainer.appendChild(clone);
+  }
+
+  // click en pieza para clonar
+  pieces.forEach((piece) => {
+    piece.addEventListener("click", () => {
+      createDraggableClone(piece);
+    });
   });
 
-  document.addEventListener("mousemove", ev => {
-    if (isDragging) {
-      const rect = canvas.getBoundingClientRect();
-      newPiece.style.left = ev.clientX - rect.left - offsetX + "px";
-      newPiece.style.top = ev.clientY - rect.top - offsetY + "px";
-    }
-  });
-
-  document.addEventListener("mouseup", () => {
-    isDragging = false;
-  });
-
-  // Escalar y rotar con la rueda
-  newPiece.addEventListener("wheel", ev => {
-    ev.preventDefault();
-    let scale = parseFloat(newPiece.getAttribute("data-scale"));
-    let rotation = parseFloat(newPiece.getAttribute("data-rotation"));
-
-    if (ev.shiftKey) {
-      rotation += ev.deltaY < 0 ? 5 : -5;
-    } else {
-      scale += ev.deltaY < 0 ? 0.1 : -0.1;
-      scale = Math.max(0.1, scale);
-    }
-
-    newPiece.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
-    newPiece.setAttribute("data-scale", scale);
-    newPiece.setAttribute("data-rotation", rotation);
-  });
-
-  // Agregar al canvas
-  canvas.appendChild(newPiece);
-});
-
-  alert("¡Descargalo con garra! 🎉");
+  // botón descargar como imagen
+  const downloadBtn = document.getElementById("download-btn");
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", () => {
+      html2canvas(stencilContainer).then((canvas) => {
+        const link = document.createElement("a");
+        link.download = "stencil.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    });
+  }
 });
 
 
