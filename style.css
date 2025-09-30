@@ -80,6 +80,13 @@ h1 {
   transition: transform 0.2s ease;
 }
 
+.piece {
+  max-width: 100px; /* ajustá el tamaño que quieras */
+  max-height: 100px;
+  width: auto;
+  height: auto;
+}
+
 .pieces-container .piece:hover {
   transform: scale(1.1);
 }
