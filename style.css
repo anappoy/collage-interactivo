@@ -62,6 +62,15 @@ h1 {
 .color-blue   { background: #7397af; } /* azul corregido */
 .color-yellow { background: #f4e740; }
 
+
+.cloned {
+  z-index: 10;
+  cursor: move;
+}
+.dragging {
+  opacity: 0.5;
+}
+
 /* ===== Contenedor de piezas ===== */
 .pieces-container {
   display: grid;
