@@ -1,72 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collage Interactivo</title>
-  
-  <!-- Fuente Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Collage Interactivo</h1>
-
+  
   <div class="main-container">
-    <!-- Canvas con stencil -->
     <div class="canvas" id="canvas">
-      <img src="images/stencil-base.png" alt="Stencil base" class="stencil" />
+      <img src="images/stencil-base.png" class="stencil">
     </div>
 
-    <!-- Panel derecho -->
     <div class="panel">
-      <!-- Contenedor de piezas -->
-      <div id="pieces-container" class="pieces-container">
-        <img src="images/brush1_black.png" class="piece" id="brush1_black" />
-        <img src="images/brush1_blue.png" class="piece" id="brush1_blue" />
-        <img src="images/brush1_red.png" class="piece" id="brush1_red" />
-        <img src="images/brush1_yellow.png" class="piece" id="brush1_yellow" />
-        <img src="images/brush2_black.png" class="piece" id="brush2_black" />
-        <img src="images/brush2_blue.png" class="piece" id="brush2_blue" />
-        <img src="images/brush2_red.png" class="piece" id="brush2_red" />
-        <img src="images/brush2_yellow.png" class="piece" id="brush2_yellow" />
-        <img src="images/chuik_black.png" class="piece" id="chuik_black" />
-        <img src="images/comunidad_black.png" class="piece" id="comunidad_black" />
-        <img src="images/deseo_black.png" class="piece" id="deseo_black" />
-        <img src="images/faces1_black.png" class="piece" id="faces1_black" />
-        <img src="images/faces2_black.png" class="piece" id="faces2_black" />
-        <img src="images/gloves_black.png" class="piece" id="gloves_black" />
-        <img src="images/gloves_blue.png" class="piece" id="gloves_blue" />
-        <img src="images/heart1_black.png" class="piece" id="heart1_black" />
-        <img src="images/heart1_red.png" class="piece" id="heart1_red" />
-        <img src="images/heart2_black.png" class="piece" id="heart2_black" />
-        <img src="images/heart2_red.png" class="piece" id="heart2_red" />
-        <img src="images/hospital_black.png" class="piece" id="hospital_black" />
-        <img src="images/infancia_black.png" class="piece" id="infancia_black" />
-        <img src="images/ninez_black.png" class="piece" id="ninez_black" />
-        <img src="images/orgullo_black.png" class="piece" id="orgullo_black" />
-        <img src="images/punio_black.png" class="piece" id="punio_black" />
-        <img src="images/star1_black.png" class="piece" id="star1_black" />
-        <img src="images/star2_black.png" class="piece" id="star2_black" />
-        <img src="images/star3_black.png" class="piece" id="star3_black" />
-        <img src="images/star3_blue.png" class="piece" id="star3_blue" />
-        <img src="images/star3_red.png" class="piece" id="star3_red" />
-        <img src="images/star3_yellow.png" class="piece" id="star3_yellow" />
-        <img src="images/star4_black.png" class="piece" id="star4_black" />
-        <img src="images/star5_black.png" class="piece" id="star5_black" />
-        <img src="images/sun_black.png" class="piece" id="sun_black" />
+      <div id="pieces-container">
+        <img src="images/brush1_black.png" class="piece">
+        <img src="images/brush1_red.png" class="piece">
+        <img src="images/brush1_blue.png" class="piece">
       </div>
-
-      <!-- Botón de descarga -->
-      <div class="actions">
-        <button id="downloadBtn">¡Descargalo con garra!</button>
-      </div>
+      <button id="downloadBtn">Descargar</button>
     </div>
   </div>
 
-  <!-- Librería para exportar -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="script.js"></script>
+</body>
+</html>
+
 </body>
 </html>
 
