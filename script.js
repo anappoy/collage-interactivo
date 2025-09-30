@@ -143,10 +143,22 @@ function scaleRotate(ev) {
   element.setAttribute("data-rotation", rotation);
 }
 
-// ===== Click derecho para eliminar =====
-canvas.addEventListener("contextmenu", (e) => {
-  e.preventDefault();
-  if (e.target.classList.contains("cloned")) e.target.remove();
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Delete" || e.key === "Backspace") {
+    const selected = document.querySelector(".selected");
+    if (selected) selected.remove();
+  }
+});
+
+// Para marcar un clon como seleccionado al hacer click
+canvas.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("cloned")) return;
+  document.querySelectorAll(".cloned").forEach(el => el.classList.remove("selected"));
+  e.target.classList.add("selected");
+
+  // Orden z-index
+  if (e.ctrlKey) e.target.style.zIndex = Math.max(1, parseInt(e.target.style.zIndex) - 1);
+  else e.target.style.zIndex = parseInt(e.target.style.zIndex) + 1;
 });
 
 // ===== Click para traer adelante/enviar atrás =====
@@ -158,6 +170,8 @@ canvas.addEventListener("click", (e) => {
     e.target.style.zIndex = parseInt(e.target.style.zIndex) + 1;
   }
 });
+
+
 
 // ===== Descargar canvas =====
 downloadBtn.addEventListener("click", () => {
