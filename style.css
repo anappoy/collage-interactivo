@@ -24,22 +24,23 @@ h1 {
 
 /* ===== Canvas con stencil ===== */
 .canvas {
+  position: relative; /* 🔹 mantiene los elementos absolutos dentro */
   width: 600px;
   height: 850px;
   border: 1px solid #ccc;
   background: #fff;
-  flex-shrink: 0; /* no se achica */
+  flex-shrink: 0;
 }
 
 .stencil {
+  position: absolute; /* 🔹 el stencil se queda fijo dentro del canvas */
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
   z-index: 0;
+  pointer-events: none; /* para que no bloquee los clics */
 }
 
 /* ===== Panel derecho / piezas ===== */
