@@ -140,14 +140,15 @@ canvas.addEventListener("contextmenu", (e) => {
 
 // ===== Cambiar el orden (traer adelante / enviar atrás) =====
 canvas.addEventListener("click", (e) => {
-  if(e.target.classList.contains("cloned")) {
-    if(e.shiftKey) { // shift + click → enviar atrás
-      e.target.style.zIndex = parseInt(e.target.style.zIndex) - 1;
+  if (e.target.classList.contains("cloned")) {
+    if (e.ctrlKey) { // Ctrl + click → enviar atrás
+      e.target.style.zIndex = Math.max(1, parseInt(e.target.style.zIndex) - 1);
     } else { // click normal → traer adelante
       e.target.style.zIndex = parseInt(e.target.style.zIndex) + 1;
     }
   }
 });
+
 
 
 // ===== Descargar canvas =====
