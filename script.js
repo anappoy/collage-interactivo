@@ -2,30 +2,33 @@ const canvas = document.getElementById("canvas");
 const pieces = document.querySelectorAll(".piece");
 const downloadBtn = document.getElementById("downloadBtn");
 
-// ===== Drag & Drop dentro del canvas =====
+// ===== Click para clonar piezas =====
 pieces.forEach(piece => {
-  piece.addEventListener("mousedown", startDrag);
-  piece.addEventListener("touchstart", startDragTouch, {passive:false});
+  piece.addEventListener("mousedown", createClone);
+  piece.addEventListener("touchstart", createCloneTouch, {passive:false});
 });
 
-function startDrag(e) {
+function createClone(e) {
   e.preventDefault();
   const piece = e.target.cloneNode(true);
   piece.classList.add("cloned");
   piece.style.position = "absolute";
   piece.style.width = "80px";
   piece.style.height = "80px";
+
   piece.style.left = e.clientX - canvas.getBoundingClientRect().left - 40 + "px";
   piece.style.top  = e.clientY - canvas.getBoundingClientRect().top - 40 + "px";
+
   piece.setAttribute("data-scale", 1);
   piece.setAttribute("data-rotation", 0);
   piece.style.zIndex = 10;
+
   canvas.appendChild(piece);
 
-  dragElement(piece, e);
+  enableDrag(piece);
 }
 
-function startDragTouch(e) {
+function createCloneTouch(e) {
   e.preventDefault();
   const touch = e.touches[0];
   const piece = e.target.cloneNode(true);
@@ -33,34 +36,41 @@ function startDragTouch(e) {
   piece.style.position = "absolute";
   piece.style.width = "80px";
   piece.style.height = "80px";
+
   piece.style.left = touch.clientX - canvas.getBoundingClientRect().left - 40 + "px";
   piece.style.top  = touch.clientY - canvas.getBoundingClientRect().top - 40 + "px";
+
   piece.setAttribute("data-scale", 1);
   piece.setAttribute("data-rotation", 0);
   piece.style.zIndex = 10;
+
   canvas.appendChild(piece);
 
-  dragElementTouch(piece, touch);
+  enableDrag(piece);
 }
 
-// ===== Funciones de movimiento =====
-function dragElement(element, eStart) {
-  let startX = eStart.clientX;
-  let startY = eStart.clientY;
-  let rect = element.getBoundingClientRect();
-  let offsetX = startX - rect.left;
-  let offsetY = startY - rect.top;
+// ===== Función que permite arrastrar cualquier clon =====
+function enableDrag(element) {
+  element.addEventListener("mousedown", dragStart);
+  element.addEventListener("touchstart", dragStartTouch, {passive:false});
+  element.addEventListener("wheel", scaleRotate);
+}
 
-  function move(e) {
-    let x = e.clientX - canvas.getBoundingClientRect().left - offsetX;
-    let y = e.clientY - canvas.getBoundingClientRect().top - offsetY;
-    
-    // Limitar dentro del canvas
+function dragStart(e) {
+  e.preventDefault();
+  const element = e.target;
+  let offsetX = e.clientX - element.getBoundingClientRect().left;
+  let offsetY = e.clientY - element.getBoundingClientRect().top;
+
+  function move(eMove) {
+    let x = eMove.clientX - canvas.getBoundingClientRect().left - offsetX;
+    let y = eMove.clientY - canvas.getBoundingClientRect().top - offsetY;
+
     x = Math.max(0, Math.min(x, canvas.clientWidth - element.offsetWidth));
     y = Math.max(0, Math.min(y, canvas.clientHeight - element.offsetHeight));
 
     element.style.left = x + "px";
-    element.style.top  = y + "px";
+    element.style.top = y + "px";
   }
 
   function up() {
@@ -70,22 +80,26 @@ function dragElement(element, eStart) {
 
   window.addEventListener("mousemove", move);
   window.addEventListener("mouseup", up);
-
-  // Escalar y rotar con rueda
-  element.addEventListener("wheel", scaleRotate);
 }
 
-function dragElementTouch(element, touchStart) {
-  function move(e) {
-    const touch = e.touches[0];
-    let x = touch.clientX - canvas.getBoundingClientRect().left - element.offsetWidth/2;
-    let y = touch.clientY - canvas.getBoundingClientRect().top - element.offsetHeight/2;
+function dragStartTouch(e) {
+  e.preventDefault();
+  const element = e.target;
+  const touch = e.touches[0];
+
+  let offsetX = touch.clientX - element.getBoundingClientRect().left;
+  let offsetY = touch.clientY - element.getBoundingClientRect().top;
+
+  function move(eMove) {
+    const touchMove = eMove.touches[0];
+    let x = touchMove.clientX - canvas.getBoundingClientRect().left - offsetX;
+    let y = touchMove.clientY - canvas.getBoundingClientRect().top - offsetY;
 
     x = Math.max(0, Math.min(x, canvas.clientWidth - element.offsetWidth));
     y = Math.max(0, Math.min(y, canvas.clientHeight - element.offsetHeight));
 
     element.style.left = x + "px";
-    element.style.top  = y + "px";
+    element.style.top = y + "px";
   }
 
   function end() {
@@ -95,8 +109,6 @@ function dragElementTouch(element, touchStart) {
 
   window.addEventListener("touchmove", move, {passive:false});
   window.addEventListener("touchend", end);
-
-  element.addEventListener("wheel", scaleRotate);
 }
 
 // ===== Escalar y rotar con rueda =====
@@ -127,7 +139,6 @@ downloadBtn.addEventListener("click", () => {
   });
   alert("¡Descargalo con garra! 🎉");
 });
-
 
 
 
